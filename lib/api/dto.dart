@@ -334,4 +334,51 @@ class AppNotification {
   final String message;
   final bool? read;
   final String? createdAt;
+
+  /// `yyyy-MM-dd HH:mm` slice of the server's wall-clock timestamp, or ''
+  /// when absent.
+  String get timestampLabel {
+    final c = createdAt ?? '';
+    return c.length >= 16 ? c.substring(0, 16).replaceFirst('T', ' ') : '';
+  }
+}
+
+/// Notification delivery preferences (contract:
+/// `NotificationPreferencesRequest`/`Response`). Serialization is
+/// patch-style: null fields are omitted so the server keeps their current
+/// value; a blank quiet-hours time clears it. `typePreferences` maps
+/// NotificationType wire names to their push toggle.
+class NotificationPreferences {
+  NotificationPreferences({
+    this.pushNotificationsEnabled,
+    this.quietHoursEnabled,
+    this.quietHoursStart,
+    this.quietHoursEnd,
+    this.typePreferences,
+  });
+
+  factory NotificationPreferences.fromJson(Map<String, dynamic> json) =>
+      NotificationPreferences(
+        pushNotificationsEnabled: json['pushNotificationsEnabled'] as bool?,
+        quietHoursEnabled: json['quietHoursEnabled'] as bool?,
+        quietHoursStart: json['quietHoursStart'] as String?,
+        quietHoursEnd: json['quietHoursEnd'] as String?,
+        typePreferences: (json['typePreferences'] as Map<String, dynamic>?)
+            ?.map((k, v) => MapEntry(k, v as bool)),
+      );
+
+  final bool? pushNotificationsEnabled;
+  final bool? quietHoursEnabled;
+  final String? quietHoursStart;
+  final String? quietHoursEnd;
+  final Map<String, bool>? typePreferences;
+
+  /// Only non-null fields are sent — patch semantics per the contract.
+  Map<String, dynamic> toJson() => {
+        'pushNotificationsEnabled': ?pushNotificationsEnabled,
+        'quietHoursEnabled': ?quietHoursEnabled,
+        'quietHoursStart': ?quietHoursStart,
+        'quietHoursEnd': ?quietHoursEnd,
+        'typePreferences': ?typePreferences,
+      };
 }

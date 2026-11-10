@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'api/api_client.dart';
 import 'api/checkin_api.dart';
 import 'api/message_api.dart';
+import 'api/notification_api.dart';
 import 'api/partner_api.dart';
 import 'api/user_api.dart';
 import 'auth/auth_controller.dart';
@@ -43,6 +44,7 @@ void main() {
         Provider<PartnerApi>(create: (_) => PartnerApi(client.api)),
         Provider<MessageApi>(create: (_) => MessageApi(client.api)),
         Provider<UserApi>(create: (_) => UserApi(client.api)),
+        Provider<NotificationApi>(create: (_) => NotificationApi(client.api)),
         Provider<RealtimeService>.value(value: realtime),
       ],
       child: const RecoverTogetherApp(),

@@ -38,7 +38,7 @@ Future<void> _pump(WidgetTester tester, AuthController auth, UserApi api) async 
       // also unmounts any in-flight spinners.
       child: MaterialApp(
         home: Consumer<AuthController>(
-          builder: (_, value, __) => value.status == AuthStatus.anonymous
+          builder: (_, value, _) => value.status == AuthStatus.anonymous
               ? const LoginScreen()
               : const SettingsScreen(),
         ),

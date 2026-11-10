@@ -5,6 +5,7 @@ import '../api/checkin_api.dart';
 import '../api/dto.dart';
 import '../auth/auth_controller.dart';
 import 'chat_screen.dart';
+import 'notifications_screen.dart';
 import 'partner_screen.dart';
 import 'settings_screen.dart';
 
@@ -76,6 +77,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ? 'RecoverTogether'
             : 'Hi, ${user.name}'),
         actions: [
+          IconButton(
+            tooltip: 'Notifications',
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+            ),
+          ),
           IconButton(
             tooltip: 'Settings',
             icon: const Icon(Icons.settings_outlined),
