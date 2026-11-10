@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'api/api_client.dart';
+import 'api/checkin_api.dart';
 import 'auth/auth_controller.dart';
 import 'auth/token_storage.dart';
 import 'screens/home_screen.dart';
@@ -18,8 +19,11 @@ void main() {
   unawaited(authController.bootstrap());
 
   runApp(
-    ChangeNotifierProvider.value(
-      value: authController,
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: authController),
+        Provider<CheckInApi>(create: (_) => CheckInApi(client.api)),
+      ],
       child: const RecoverTogetherApp(),
     ),
   );

@@ -1,51 +1,10 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:app/api/auth_api.dart';
 import 'package:app/api/dto.dart';
 
-/// Immutable snapshot of a request at adapter time.
-class RequestRecord {
-  RequestRecord(RequestOptions options)
-      : method = options.method,
-        path = options.path,
-        data = options.data;
-
-  final String method;
-  final String path;
-  final Object? data;
-}
-
-class MockAdapter implements HttpClientAdapter {
-  MockAdapter(this.handler);
-
-  final List<RequestRecord> requests = [];
-  Future<ResponseBody> Function(RequestOptions options) handler;
-
-  @override
-  Future<ResponseBody> fetch(
-    RequestOptions options,
-    Stream<Uint8List>? requestStream,
-    Future<void>? cancelFuture,
-  ) async {
-    requests.add(RequestRecord(options));
-    return handler(options);
-  }
-
-  @override
-  void close({bool force = false}) {}
-}
-
-ResponseBody jsonBody(Object? json, int status) => ResponseBody.fromString(
-      jsonEncode(json),
-      status,
-      headers: {
-        Headers.contentTypeHeader: [Headers.jsonContentType],
-      },
-    );
+import 'support/mock_adapter.dart';
 
 void main() {
   late MockAdapter adapter;
