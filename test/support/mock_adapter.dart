@@ -12,11 +12,15 @@ class RequestRecord {
   RequestRecord(RequestOptions options)
       : method = options.method,
         path = options.path,
+        uri = options.uri.toString(),
         headers = Map<String, dynamic>.of(options.headers),
         data = options.data;
 
   final String method;
   final String path;
+
+  /// Fully composed URL including query parameters.
+  final String uri;
   final Map<String, dynamic> headers;
   final Object? data;
 }

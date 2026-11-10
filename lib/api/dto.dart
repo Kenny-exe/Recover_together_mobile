@@ -203,3 +203,82 @@ class Dashboard {
 
   bool get hasPartner => partnerName != null;
 }
+
+/// Partner connection status per the contract enum.
+enum PartnerRequestStatus {
+  pending('PENDING'),
+  accepted('ACCEPTED'),
+  rejected('REJECTED');
+
+  const PartnerRequestStatus(this.wire);
+
+  /// The exact string the backend contract uses for this status.
+  final String wire;
+
+  static PartnerRequestStatus fromWire(String value) =>
+      PartnerRequestStatus.values.firstWhere(
+        (s) => s.wire == value,
+        orElse: () =>
+            throw ArgumentError('Unknown partner request status: $value'),
+      );
+}
+
+/// The connected partner (contract: `PartnerResponse`). Null results from
+/// `GET /partner/current` mean the user has no partner yet.
+class Partner {
+  Partner({this.id, required this.name, required this.email});
+
+  factory Partner.fromJson(Map<String, dynamic> json) => Partner(
+        id: json['id'] as int?,
+        name: json['name'] as String? ?? '',
+        email: json['email'] as String? ?? '',
+      );
+
+  final int? id;
+  final String name;
+  final String email;
+}
+
+/// A partner connection request (contract: `PartnerRequestResponse`). For
+/// incoming requests [senderName] is the other user; for sent requests
+/// [receiverName] is.
+class PartnerRequest {
+  PartnerRequest({
+    this.id,
+    required this.senderName,
+    required this.receiverName,
+    this.status,
+    this.createdAt,
+  });
+
+  factory PartnerRequest.fromJson(Map<String, dynamic> json) =>
+      PartnerRequest(
+        id: json['id'] as int?,
+        senderName: json['senderName'] as String? ?? '',
+        receiverName: json['receiverName'] as String? ?? '',
+        status: json['status'] == null
+            ? null
+            : PartnerRequestStatus.fromWire(json['status'] as String),
+        createdAt: json['createdAt'] as String?,
+      );
+
+  final int? id;
+  final String senderName;
+  final String receiverName;
+  final PartnerRequestStatus? status;
+  final String? createdAt;
+}
+
+/// A request this user sent (contract: `SentRequestResponse` — only the
+/// receiver's name, no status; sent requests stay pending until answered).
+class SentRequest {
+  SentRequest({this.requestId, required this.receiverName});
+
+  factory SentRequest.fromJson(Map<String, dynamic> json) => SentRequest(
+        requestId: json['requestId'] as int?,
+        receiverName: json['receiverName'] as String? ?? '',
+      );
+
+  final int? requestId;
+  final String receiverName;
+}

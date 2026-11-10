@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../api/checkin_api.dart';
 import '../api/dto.dart';
 import '../auth/auth_controller.dart';
+import 'partner_screen.dart';
 
 /// The user's daily home base: streaks, today's check-in, partner status.
 /// Data comes from GET /dashboard and GET /checkin/latest.
@@ -275,12 +276,29 @@ class _PartnerCard extends StatelessWidget {
                         '${dashboard.daysSinceLastCheckIn} day(s) since their last check-in'),
                 ],
               ),
-            ] else
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const PartnerScreen()),
+                ),
+                icon: const Icon(Icons.settings_outlined),
+                label: const Text('Manage partner'),
+              ),
+            ] else ...[
               Text(
                 'No partner connected yet. Ask your partner to send you a '
                 'partner request — you will see their check-ins here.',
                 style: theme.textTheme.bodySmall,
               ),
+              const SizedBox(height: 8),
+              FilledButton.tonalIcon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const PartnerScreen()),
+                ),
+                icon: const Icon(Icons.person_add_alt_1),
+                label: const Text('Find a partner'),
+              ),
+            ],
           ],
         ),
       ),
