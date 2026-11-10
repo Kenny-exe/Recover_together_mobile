@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../api/checkin_api.dart';
 import '../api/dto.dart';
 import '../auth/auth_controller.dart';
+import 'chat_screen.dart';
 import 'partner_screen.dart';
 
 /// The user's daily home base: streaks, today's check-in, partner status.
@@ -275,6 +276,14 @@ class _PartnerCard extends StatelessWidget {
                     Text(
                         '${dashboard.daysSinceLastCheckIn} day(s) since their last check-in'),
                 ],
+              ),
+              const SizedBox(height: 8),
+              FilledButton.tonalIcon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const ChatScreen()),
+                ),
+                icon: const Icon(Icons.chat_bubble_outline),
+                label: const Text('Message partner'),
               ),
               const SizedBox(height: 8),
               OutlinedButton.icon(

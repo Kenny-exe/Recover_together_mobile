@@ -282,3 +282,56 @@ class SentRequest {
   final int? requestId;
   final String receiverName;
 }
+
+/// One chat message (contract: `ChatMessageResponse`). The sender is only
+/// identified by name — no sender id exists in the contract, so mine-vs-theirs
+/// alignment compares against the signed-in user's name.
+class ChatMessage {
+  ChatMessage({this.id, this.senderName, required this.content, this.createdAt});
+
+  factory ChatMessage.fromJson(Map<String, dynamic> json) => ChatMessage(
+        id: json['id'] as int?,
+        senderName: json['senderName'] as String?,
+        content: json['content'] as String? ?? '',
+        createdAt: json['createdAt'] as String?,
+      );
+
+  final int? id;
+  final String? senderName;
+  final String content;
+  final String? createdAt;
+
+  /// `HH:mm` slice of the server's wall-clock timestamp, or '' when absent.
+  String get timeLabel {
+    final c = createdAt ?? '';
+    return c.length >= 16 ? c.substring(11, 16) : '';
+  }
+}
+
+/// An in-app notification (contract: `NotificationResponse`). `type` is kept
+/// as the raw wire string so unknown future types never crash parsing; the
+/// NotificationType enum lives in the contract, not the client.
+class AppNotification {
+  AppNotification({
+    this.id,
+    this.type,
+    required this.message,
+    this.read,
+    this.createdAt,
+  });
+
+  factory AppNotification.fromJson(Map<String, dynamic> json) =>
+      AppNotification(
+        id: json['id'] as int?,
+        type: json['type'] as String?,
+        message: json['message'] as String? ?? '',
+        read: json['read'] as bool?,
+        createdAt: json['createdAt'] as String?,
+      );
+
+  final int? id;
+  final String? type;
+  final String message;
+  final bool? read;
+  final String? createdAt;
+}
