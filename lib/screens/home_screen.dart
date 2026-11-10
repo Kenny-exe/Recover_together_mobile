@@ -6,6 +6,7 @@ import '../api/dto.dart';
 import '../auth/auth_controller.dart';
 import 'chat_screen.dart';
 import 'partner_screen.dart';
+import 'settings_screen.dart';
 
 /// The user's daily home base: streaks, today's check-in, partner status.
 /// Data comes from GET /dashboard and GET /checkin/latest.
@@ -75,6 +76,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ? 'RecoverTogether'
             : 'Hi, ${user.name}'),
         actions: [
+          IconButton(
+            tooltip: 'Settings',
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const SettingsScreen()),
+            ),
+          ),
           IconButton(
             tooltip: 'Log out',
             icon: const Icon(Icons.logout),

@@ -100,6 +100,13 @@ class AuthController extends ChangeNotifier {
     }
   }
 
+  /// Replaces the cached profile after a successful PUT /users/me so the UI
+  /// reflects the change immediately.
+  void updateUser(UserResponse updated) {
+    user = updated;
+    notifyListeners();
+  }
+
   /// Best-effort server-side revocation, then the local pair is dropped
   /// regardless (the contract treats logout as client-authoritative for the
   /// UX; the refresh token becomes unusable either way once rotated).
