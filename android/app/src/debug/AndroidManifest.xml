@@ -4,4 +4,8 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Dev backends listen on plain http (emulator 10.0.2.2, LAN IPs).
+         Cleartext is allowed in debug builds only; release keeps the secure
+         default, so production BASE_URL must be https. -->
+    <application android:usesCleartextTraffic="true"/>
 </manifest>
