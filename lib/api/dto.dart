@@ -382,3 +382,53 @@ class NotificationPreferences {
         'typePreferences': ?typePreferences,
       };
 }
+
+/// Device platform per the contract enum (`ANDROID | IOS`).
+enum DevicePlatform {
+  android('ANDROID'),
+  ios('IOS');
+
+  const DevicePlatform(this.wire);
+
+  /// The exact string the backend contract uses for this platform.
+  final String wire;
+
+  static DevicePlatform fromWire(String value) => DevicePlatform.values
+      .firstWhere(
+        (p) => p.wire == value,
+        orElse: () => throw ArgumentError('Unknown device platform: $value'),
+      );
+}
+
+/// One registered push device (contract: `DeviceResponse`). The FCM token is
+/// never returned — only a masked [tokenPreview] (`abc…xyz`).
+class Device {
+  Device({
+    this.id,
+    this.platform,
+    required this.deviceName,
+    this.tokenPreview,
+    this.active,
+    this.createdAt,
+  });
+
+  factory Device.fromJson(Map<String, dynamic> json) => Device(
+        id: json['id'] as int?,
+        platform: json['platform'] == null
+            ? null
+            : DevicePlatform.fromWire(json['platform'] as String),
+        deviceName: json['deviceName'] as String? ?? '',
+        tokenPreview: json['tokenPreview'] as String?,
+        active: json['active'] as bool?,
+        createdAt: json['createdAt'] as String?,
+      );
+
+  final int? id;
+  final DevicePlatform? platform;
+
+  /// Optional friendly name; empty when the registration omitted it.
+  final String deviceName;
+  final String? tokenPreview;
+  final bool? active;
+  final String? createdAt;
+}

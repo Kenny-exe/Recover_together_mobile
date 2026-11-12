@@ -63,16 +63,20 @@ class SseParser {
 /// events (the backend publishes to the receiver only), so a consumer can
 /// treat any `message` event as "from my partner".
 class RealtimeService {
-  RealtimeService({required this._storage, String? baseUrl})
-      : _dio = Dio(
-          BaseOptions(
-            baseUrl: baseUrl ?? kBaseUrl,
-            connectTimeout: const Duration(seconds: 10),
-            // A live SSE stream has no meaningful receive deadline: heartbeats
-            // arrive every 25 s and the server closes after 30 min anyway.
-            receiveTimeout: null,
-          ),
-        ) {
+  /// [_dioOverride] exists for tests — production builds construct the Dio
+  /// internally from [baseUrl].
+  RealtimeService({required this._storage, String? baseUrl, Dio? dioOverride})
+      : _dio = dioOverride ??
+            Dio(
+              BaseOptions(
+                baseUrl: baseUrl ?? kBaseUrl,
+                connectTimeout: const Duration(seconds: 10),
+                // A live SSE stream has no meaningful receive deadline:
+                // heartbeats arrive every 25 s and the server closes after
+                // 30 min anyway.
+                receiveTimeout: null,
+              ),
+            ) {
     _dio.options.headers['Accept'] = 'text/event-stream';
   }
 

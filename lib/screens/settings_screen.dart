@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../api/dto.dart';
 import '../api/user_api.dart';
 import '../auth/auth_controller.dart';
+import 'devices_screen.dart';
 
 /// Profile management: edit name/email/timezone, change the password (which
 /// signs the user out everywhere), and the irreversible account deletion.
@@ -295,6 +296,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 label: const Text('Change password'),
               ),
             ],
+          ),
+          const SizedBox(height: 24),
+          Text('Devices', style: theme.textTheme.titleMedium),
+          const SizedBox(height: 12),
+          Card(
+            clipBehavior: Clip.antiAlias,
+            child: ListTile(
+              leading: const Icon(Icons.devices_other_outlined),
+              title: const Text('Push devices'),
+              subtitle: const Text(
+                  'Phones that receive push notifications for your account'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const DevicesScreen()),
+              ),
+            ),
           ),
           const SizedBox(height: 24),
           Text('Danger zone', style: theme.textTheme.titleMedium),
