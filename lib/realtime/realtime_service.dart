@@ -136,7 +136,13 @@ class RealtimeService {
       _cancelToken = CancelToken();
       final res = await _dio.get<ResponseBody>(
         '/events',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
+        // SSE never ends, so the response MUST be streamed: with the default
+        // json/text response type Dio waits for the whole body (an EOF that
+        // never arrives) and the connect future would hang forever.
+        options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+          responseType: ResponseType.stream,
+        ),
         cancelToken: _cancelToken,
       );
       _opening = false;
